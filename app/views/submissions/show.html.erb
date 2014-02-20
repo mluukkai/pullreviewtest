@@ -1,0 +1,62 @@
+<p id="notice"><%= notice %></p>
+
+<div class="header">
+  <h1><%= @submission.course%></h1>
+
+  <h2>submission for week <%= @submission.week %></h2>
+</div>
+
+<h3>
+  <%= @submission.first_name %> <%= @submission.last_name %> (<%= @submission.student_number %>)
+</h3>
+
+<p>
+  <%= @submission.email %>
+</p>
+
+<p>
+  <%= link_to @submission.github, @submission.github %>
+</p>
+
+<p>
+  <strong>Link to this submission</strong>
+  <%= link_to "#{request.protocol}#{request.host_with_port}/submissions/"+@submission.identifier, submission_path(@submission.identifier) %>
+</p>
+
+<p>
+  <strong> <%= @submission.total%> exercises marked:</strong>
+</p>
+
+<table border="1">
+<tr>
+  <% (1..@submission.exercises_at_this_week).each do |e| %>
+      <th><%= e %></th>
+  <% end %>
+</tr>
+<tr>
+    <% (1..@submission.exercises_at_this_week).each do |e| %>
+        <td><%= t(@submission.assignment(e)) %></td>
+    <% end %>
+</tr>
+</table>
+
+<p>
+  <strong>Hours used:</strong>
+  <%= @submission.hours %>
+</p>
+
+<p>
+  <strong>Comments:</strong>
+  <div class="comments">
+    <%= markdown @submission.comments %>
+  </div>
+</p>
+
+
+<% unless @submission.week<Course.current.current_week  %>
+    <%= link_to 'Edit this submission', edit_submission_path(@submission.identifier) %>
+<% end %>
+
+<br>
+
+<%= link_to 'Back to home', root_path %>
